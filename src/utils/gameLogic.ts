@@ -1,4 +1,3 @@
-
 import { GameType, HoleScore, PlayerHandicap, RoundSetup, Tee } from "./types";
 
 /**
@@ -44,21 +43,17 @@ export const calculateNetScore = (
 
 /**
  * Calculate the points for Bingo Bango Bongo on a hole
+ * 
+ * This is now handled directly in the BingoBangoBongoSelector component
+ * and is kept here for backward compatibility
  */
 export const calculateBingoBangoBongoPoints = (
   playerScores: HoleScore[],
   playerId: string
 ): number => {
-  // This is a simplified version. In a real app, you would need more data:
-  // - First on green (Bingo)
-  // - Closest to pin after all on green (Bango)
-  // - First in hole (Bongo)
-  
-  // For this example, we'll assign 1 point to the player with the lowest score
-  const lowestScore = Math.min(...playerScores.map(score => score.netScore));
-  const playerScore = playerScores.find(score => score.playerId === playerId)?.netScore || 0;
-  
-  return playerScore === lowestScore ? 1 : 0;
+  // This logic is now mostly handled in the BingoBangoBongoSelector
+  // Returns 0 as a fallback since points are explicitly assigned now
+  return 0;
 };
 
 /**
@@ -151,6 +146,7 @@ export const calculateGamePoints = (
 ): number => {
   switch (gameType) {
     case "bingoBangoBongo":
+      // BBB points are now assigned via UI, but keep this for backward compatibility
       return calculateBingoBangoBongoPoints(playerScores, playerId);
     
     case "wolf":

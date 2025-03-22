@@ -1,14 +1,18 @@
-import React, { useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import ScoreCard from "../components/ScoreCard";
 import { useGame } from "../contexts/GameContext";
 import { HoleScore } from "../utils/types";
 import { List, BarChart } from "lucide-react";
+import { BingoBangoBongoSelector } from "../components/BingoBangoBongoSelector";
 
 const Round = () => {
   const navigate = useNavigate();
   const { state, recordScore, navigateToHole } = useGame();
+  const [showBBBSelector, setShowBBBSelector] = useState(false);
+  const [currentScores, setCurrentScores] = useState<HoleScore[]>([]);
   
   useEffect(() => {
     // Redirect to setup if no current round
@@ -26,7 +30,21 @@ const Round = () => {
     return null;
   }
   
+  // Check if BBB game is active
+  const hasBBBGame = state.currentRound.games.some(game => game.type === "bingoBangoBongo");
+  
   const handleScoreSubmit = (scores: HoleScore[]) => {
+    // If there's a BBB game, show the selector before proceeding
+    if (hasBBBGame) {
+      setCurrentScores(scores);
+      setShowBBBSelector(true);
+    } else {
+      // No BBB game, proceed normally
+      submitScores(scores);
+    }
+  };
+  
+  const submitScores = (scores: HoleScore[]) => {
     // Record each score
     scores.forEach(score => {
       recordScore(
@@ -45,6 +63,11 @@ const Round = () => {
       // Otherwise move to the next hole
       navigateToHole(state.currentRound.currentHole + 1);
     }
+  };
+  
+  const handleBBBComplete = (scores: HoleScore[]) => {
+    setShowBBBSelector(false);
+    submitScores(scores);
   };
   
   return (
@@ -83,16 +106,26 @@ const Round = () => {
           </div>
         </div>
         
-        <ScoreCard 
-          course={selectedCourse}
-          currentHole={state.currentRound.currentHole}
-          players={state.currentRound.players}
-          games={state.currentRound.games}
-          scores={state.roundData.scores}
-          onScoreSubmit={handleScoreSubmit}
-          onNavigateHole={navigateToHole}
-          totalHoles={state.currentRound.totalHoles}
-        />
+        {showBBBSelector ? (
+          <BingoBangoBongoSelector
+            players={state.currentRound.players}
+            currentHole={state.currentRound.currentHole}
+            scores={currentScores}
+            onComplete={handleBBBComplete}
+            onCancel={() => setShowBBBSelector(false)}
+          />
+        ) : (
+          <ScoreCard 
+            course={selectedCourse}
+            currentHole={state.currentRound.currentHole}
+            players={state.currentRound.players}
+            games={state.currentRound.games}
+            scores={state.roundData.scores}
+            onScoreSubmit={handleScoreSubmit}
+            onNavigateHole={navigateToHole}
+            totalHoles={state.currentRound.totalHoles}
+          />
+        )}
         
         <div className="fixed bottom-0 left-0 right-0 glass-morphism border-t border-border/40 py-2">
           <div className="max-w-screen-lg mx-auto px-4 sm:px-6">
