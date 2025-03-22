@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { ArrowLeft, Home, Golf, Menu } from "lucide-react";
+import { ArrowLeft, Home, Flag, Menu } from "lucide-react";
 import { useGame } from "../contexts/GameContext";
 
 const Header: React.FC = () => {
@@ -86,7 +86,7 @@ const Header: React.FC = () => {
                   }}
                   className="flex items-center space-x-2 py-2 px-3 rounded-lg text-destructive hover:bg-destructive/10 transition-colors text-left"
                 >
-                  <Golf size={18} />
+                  <Flag size={18} />
                   <span>End Round</span>
                 </button>
               )}

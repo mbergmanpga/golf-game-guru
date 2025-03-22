@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
-import { Clock, Golf, Plus, Settings, Trophy, Users } from "lucide-react";
+import { Clock, Flag, Plus, Settings, Trophy, Users } from "lucide-react";
 
 const Index = () => {
   return (
@@ -10,7 +10,7 @@ const Index = () => {
       <div className="space-y-10 py-6">
         <div className="text-center max-w-2xl mx-auto">
           <div className="icon-container mx-auto mb-6">
-            <Golf size={24} />
+            <Flag size={24} />
           </div>
           <h1 className="heading-1 mb-4">Golf Game Guru</h1>
           <p className="text-xl text-foreground/70">
