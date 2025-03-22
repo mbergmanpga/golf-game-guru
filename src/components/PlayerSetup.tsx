@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import { PlayerHandicap } from "../utils/types";
 import { Plus, Trash2, User } from "lucide-react";
 
@@ -38,115 +39,206 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="card p-5">
-        <h3 className="heading-3 mb-4">Add Players</h3>
+  const renderItem = ({ item }: { item: PlayerHandicap }) => {
+    const playerTee = tees.find(t => t.id === item.tee);
+    
+    return (
+      <View style={styles.playerCard}>
+        <View style={styles.playerInfo}>
+          <View style={styles.iconContainer}>
+            <User size={18} color="#16a34a" />
+          </View>
+          <View>
+            <Text style={styles.playerName}>{item.name}</Text>
+            <View style={styles.playerDetails}>
+              <Text style={styles.playerDetailText}>Handicap: {item.handicapIndex}</Text>
+              <Text style={styles.playerDetailText}>•</Text>
+              <Text style={styles.playerDetailText}>Tee: {playerTee?.name || item.tee}</Text>
+            </View>
+          </View>
+        </View>
         
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="playerName" className="block text-sm font-medium text-foreground/70 mb-1">
-                Player Name
-              </label>
-              <input
-                id="playerName"
-                type="text"
+        <TouchableOpacity
+          onPress={() => onRemovePlayer(item.id)}
+          style={styles.removeButton}
+        >
+          <Trash2 size={18} color="#ef4444" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.heading}>Add Players</Text>
+        
+        <View style={styles.formContainer}>
+          <View style={styles.formGrid}>
+            <View style={styles.formField}>
+              <Text style={styles.label}>Player Name</Text>
+              <TextInput
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChangeText={setName}
                 placeholder="Enter player name"
-                className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:ring-1 focus:ring-ring transition-all"
+                style={styles.input}
               />
-            </div>
+            </View>
             
-            <div>
-              <label htmlFor="handicapIndex" className="block text-sm font-medium text-foreground/70 mb-1">
-                Handicap Index
-              </label>
-              <input
-                id="handicapIndex"
-                type="number"
-                value={handicapIndex}
-                onChange={(e) => setHandicapIndex(e.target.value === "" ? "" : Number(e.target.value))}
+            <View style={styles.formField}>
+              <Text style={styles.label}>Handicap Index</Text>
+              <TextInput
+                value={handicapIndex.toString()}
+                onChangeText={(value) => setHandicapIndex(value === "" ? "" : Number(value))}
                 placeholder="Enter handicap"
-                min="0"
-                max="54"
-                step="0.1"
-                className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:ring-1 focus:ring-ring transition-all"
+                keyboardType="numeric"
+                style={styles.input}
               />
-            </div>
+            </View>
             
-            <div>
-              <label htmlFor="teeSelection" className="block text-sm font-medium text-foreground/70 mb-1">
-                Tee
-              </label>
-              <select
-                id="teeSelection"
+            <View style={styles.formField}>
+              <Text style={styles.label}>Tee</Text>
+              {/* This would be better as a Picker in real React Native */}
+              <TextInput
                 value={tee}
-                onChange={(e) => setTee(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:ring-1 focus:ring-ring transition-all"
-              >
-                {tees.map((teeOption) => (
-                  <option key={teeOption.id} value={teeOption.id}>
-                    {teeOption.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+                onChangeText={setTee}
+                placeholder="Select tee"
+                style={styles.input}
+              />
+            </View>
+          </View>
           
-          <button
-            onClick={handleAddPlayer}
+          <TouchableOpacity
+            onPress={handleAddPlayer}
             disabled={!name.trim() || handicapIndex === "" || !tee}
-            className="w-full md:w-auto px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center justify-center space-x-2"
+            style={[styles.addButton, (!name.trim() || handicapIndex === "" || !tee) && styles.disabledButton]}
           >
-            <Plus size={16} />
-            <span>Add Player</span>
-          </button>
-        </div>
-      </div>
+            <Plus size={16} color="#fff" />
+            <Text style={styles.buttonText}>Add Player</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       
       {players.length > 0 && (
-        <div className="card p-5">
-          <h3 className="heading-3 mb-4">Players ({players.length})</h3>
+        <View style={styles.card}>
+          <Text style={styles.heading}>Players ({players.length})</Text>
           
-          <div className="space-y-3">
-            {players.map((player) => {
-              const playerTee = tees.find(t => t.id === player.tee);
-              
-              return (
-                <div 
-                  key={player.id} 
-                  className="flex items-center justify-between p-3 rounded-lg border border-border bg-card"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="icon-container">
-                      <User size={18} />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">{player.name}</h4>
-                      <div className="flex items-center space-x-2 text-sm text-foreground/70">
-                        <span>Handicap: {player.handicapIndex}</span>
-                        <span>•</span>
-                        <span>Tee: {playerTee?.name || player.tee}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => onRemovePlayer(player.id)}
-                    className="p-2 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+          <FlatList
+            data={players}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.playersList}
+          />
+        </View>
       )}
-    </div>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 24,
+  },
+  card: {
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.05)',
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  formContainer: {
+    gap: 16,
+  },
+  formGrid: {
+    gap: 16,
+  },
+  formField: {
+    gap: 4,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: 'rgba(0, 0, 0, 0.7)',
+    marginBottom: 4,
+  },
+  input: {
+    width: '100%',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#fff',
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#16a34a',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    gap: 8,
+    alignSelf: 'flex-start',
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '500',
+  },
+  playersList: {
+    gap: 12,
+  },
+  playerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fff',
+  },
+  playerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(22, 163, 74, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  playerName: {
+    fontWeight: '500',
+  },
+  playerDetails: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  playerDetailText: {
+    fontSize: 14,
+    color: 'rgba(0, 0, 0, 0.7)',
+  },
+  removeButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
+});
 
 export default PlayerSetup;
