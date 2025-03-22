@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native-web";
 import { PlayerHandicap } from "../utils/types";
 import { Plus, Trash2, User } from "lucide-react";
 
@@ -98,7 +98,6 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({
             
             <View style={styles.formField}>
               <Text style={styles.label}>Tee</Text>
-              {/* This would be better as a Picker in real React Native */}
               <TextInput
                 value={tee}
                 onChangeText={setTee}

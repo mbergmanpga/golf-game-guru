@@ -1,6 +1,6 @@
 
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native-web";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
 

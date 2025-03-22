@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native-web";
 import { useLocation, Link } from "react-router-dom";
 import { ArrowLeft, Home, Flag, Menu } from "lucide-react";
 import { useGame } from "../contexts/GameContext";

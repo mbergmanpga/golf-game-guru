@@ -1,6 +1,6 @@
 
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native-web";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { Clock, Flag, Plus, Settings, Trophy, Users } from "lucide-react";
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.05)',
   },
   cardHover: {
-    // Note: In React Native, we'll handle this with Pressable state
+    // Note: In React Native Web, we'll handle this with Pressable state
   },
   disabledCard: {
     opacity: 0.6,
