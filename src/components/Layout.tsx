@@ -1,6 +1,4 @@
-
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native-web";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
 
@@ -13,43 +11,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isRoundActive = location.pathname.includes('/round');
 
   return (
-    <View style={styles.container}>
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <ScrollView 
-        style={[styles.scrollView, isRoundActive ? styles.withBottomPadding : styles.withStandardPadding]}
-        contentContainerStyle={styles.scrollViewContent}
-      >
-        <View style={styles.content}>
+      <main className={`flex-1 overflow-y-auto p-4 ${isRoundActive ? 'pb-20' : 'pb-8'}`}>
+        <div className="max-w-4xl w-full mx-auto py-6">
           {children}
-        </View>
-      </ScrollView>
-    </View>
+        </div>
+      </main>
+    </div>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    padding: 16,
-  },
-  content: {
-    maxWidth: 1024,
-    width: '100%',
-    marginHorizontal: 'auto',
-    paddingVertical: 24,
-  },
-  withBottomPadding: {
-    paddingBottom: 80,
-  },
-  withStandardPadding: {
-    paddingBottom: 32,
-  }
-});
 
 export default Layout;

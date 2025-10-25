@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native-web";
 import { useLocation, Link } from "react-router-dom";
 import { ArrowLeft, Home, Flag, Menu } from "lucide-react";
 import { useGame } from "../contexts/GameContext";
@@ -34,158 +33,68 @@ const Header: React.FC = () => {
   };
 
   return (
-    <View>
-      <View style={styles.header}>
-        <View style={styles.container}>
-          <View style={styles.headerContent}>
-            <View style={styles.titleContainer}>
+    <div>
+      <header className="h-16 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
               {!isHome && (
-                <TouchableOpacity 
-                  component={Link}
+                <Link 
                   to={isRound ? "/results" : "/"} 
-                  style={styles.backButton}
+                  className="p-2 -ml-2 hover:bg-secondary rounded-full transition-colors"
                 >
-                  <ArrowLeft size={20} color="#666" />
-                </TouchableOpacity>
+                  <ArrowLeft size={20} className="text-muted-foreground" />
+                </Link>
               )}
-              <Text style={styles.title}>{getTitle()}</Text>
+              <h1 className="text-lg font-semibold">{getTitle()}</h1>
               {isRound && state.currentRound && (
-                <View style={styles.pill}>
-                  <Text style={styles.pillText}>
-                    {state.currentRound.currentHole}/{state.currentRound.totalHoles}
-                  </Text>
-                </View>
+                <span className="bg-primary/10 text-primary text-xs font-medium px-3 py-1 rounded-full">
+                  {state.currentRound.currentHole}/{state.currentRound.totalHoles}
+                </span>
               )}
-            </View>
+            </div>
 
-            <View>
-              <TouchableOpacity 
-                style={styles.menuButton}
-                onPress={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <Menu size={20} color="#666" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
+            <button 
+              className="p-2 hover:bg-secondary rounded-full transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu size={20} className="text-muted-foreground" />
+            </button>
+          </div>
+        </div>
+      </header>
 
       {isMenuOpen && (
-        <View style={styles.mobileMenu}>
-          <View style={styles.container}>
-            <View style={styles.menuContent}>
-              <TouchableOpacity 
-                component={Link}
+        <div className="bg-background/95 backdrop-blur-sm border-t">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="py-3 space-y-1">
+              <Link 
                 to="/" 
-                style={styles.menuItem}
-                onPress={() => setIsMenuOpen(false)}
+                className="flex items-center gap-2 py-2 px-3 hover:bg-secondary rounded-lg transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
-                <Home size={18} color="#333" />
-                <Text style={styles.menuItemText}>Home</Text>
-              </TouchableOpacity>
+                <Home size={18} className="text-foreground" />
+                <span>Home</span>
+              </Link>
               
               {(isRound || isResults) && (
-                <TouchableOpacity 
-                  onPress={() => {
+                <button 
+                  onClick={() => {
                     handleEndRound();
                     setIsMenuOpen(false);
                   }}
-                  style={styles.endRoundButton}
+                  className="flex items-center gap-2 py-2 px-3 hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
                 >
-                  <Flag size={18} color="#e11d48" />
-                  <Text style={styles.endRoundText}>End Round</Text>
-                </TouchableOpacity>
+                  <Flag size={18} className="text-destructive" />
+                  <span className="text-destructive">End Round</span>
+                </button>
               )}
-            </View>
-          </View>
-        </View>
+            </div>
+          </div>
+        </div>
       )}
-    </View>
+    </div>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    height: 64,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 10,
-  },
-  container: {
-    maxWidth: 1024,
-    width: '100%',
-    marginHorizontal: 'auto',
-    paddingHorizontal: 16,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 64,
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  backButton: {
-    padding: 8,
-    marginLeft: -8,
-    borderRadius: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  pill: {
-    backgroundColor: 'rgba(22, 163, 74, 0.1)',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-  },
-  pillText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#16a34a',
-  },
-  menuButton: {
-    padding: 8,
-    borderRadius: 20,
-  },
-  mobileMenu: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.05)',
-  },
-  menuContent: {
-    paddingVertical: 12,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  menuItemText: {
-    fontSize: 16,
-  },
-  endRoundButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  endRoundText: {
-    fontSize: 16,
-    color: '#e11d48',
-  },
-});
 
 export default Header;
