@@ -92,7 +92,7 @@ const initialState: GameState = {
   error: null
 };
 
-const gameReducer = (state: GameState, action: GameAction): GameState => {
+export const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case "SET_COURSES":
       return {
